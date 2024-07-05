@@ -28,10 +28,13 @@ public class config {
     @Autowired
     SecondTasklet secondTasklet;
 
+    @Autowired
+    FirstJobListener firstJobListener;
+
     @Bean
     public Job firstJob(){
         return new JobBuilder("firstJob",jobRepository).incrementer(new RunIdIncrementer())
-                .start(firstStep()).next(secondStep()).
+                .start(firstStep()).next(secondStep()).listener(firstJobListener).
                 build();
     }
 
