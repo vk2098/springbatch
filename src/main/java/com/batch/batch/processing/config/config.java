@@ -1,6 +1,9 @@
-package com.batch.batch.processing;
+package com.batch.batch.processing.config;
 
 
+import com.batch.batch.processing.JobListeners.FirstJobListener;
+import com.batch.batch.processing.SecondTasklet;
+import com.batch.batch.processing.StepListeners.FirstStepListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
@@ -31,6 +34,9 @@ public class config {
     @Autowired
     FirstJobListener firstJobListener;
 
+    @Autowired
+    FirstStepListener firstStepListener;
+
     @Bean
     public Job firstJob(){
         return new JobBuilder("firstJob",jobRepository).incrementer(new RunIdIncrementer())
@@ -40,7 +46,10 @@ public class config {
 
 
     public Step firstStep(){
-        return new StepBuilder("firstStep",jobRepository).tasklet(firstTask(),platformTransactionManager).build();
+        return new StepBuilder("firstStep",jobRepository)
+                .tasklet(firstTask(),platformTransactionManager)
+                .listener(firstStepListener)
+                .build();
     }
 
     public Tasklet firstTask(){
