@@ -1,6 +1,9 @@
 package com.batch.batch.processing.config;
 
 
+import com.batch.batch.processing.ItemProcessor.ItemProcessor1;
+import com.batch.batch.processing.ItemReader.ItemReader1;
+import com.batch.batch.processing.ItemWriter.ItemWriter1;
 import com.batch.batch.processing.JobListeners.FirstJobListener;
 import com.batch.batch.processing.SecondTasklet;
 import com.batch.batch.processing.StepListeners.FirstStepListener;
@@ -37,13 +40,21 @@ public class config {
     @Autowired
     FirstStepListener firstStepListener;
 
-    @Bean
-    public Job firstJob(){
-        return new JobBuilder("firstJob",jobRepository).incrementer(new RunIdIncrementer())
-                .start(firstStep()).next(secondStep()).listener(firstJobListener).
-                build();
-    }
+    @Autowired
+    ItemWriter1 itemWriter1;
+    @Autowired
+    ItemReader1 itemReader1;
 
+    @Autowired
+    ItemProcessor1 itemProcessor1;
+
+//    @Bean
+//    public Job firstJob(){
+//        return new JobBuilder("firstJob",jobRepository).incrementer(new RunIdIncrementer())
+//                .start(firstStep()).next(secondStep()).listener(firstJobListener).
+//                build();
+//    }
+//
 
     public Step firstStep(){
         return new StepBuilder("firstStep",jobRepository)
@@ -63,10 +74,20 @@ public class config {
     }
 
 
-    public Step secondStep(){
-        return new StepBuilder("secondStep",jobRepository).tasklet(secondTasklet,platformTransactionManager).build();
+//    public Step secondStep(){
+//        return new StepBuilder("secondStep",jobRepository).tasklet(secondTasklet,platformTransactionManager).build();
+//    }
+
+    @Bean
+    public Job secondJob() {
+        return new JobBuilder("secondjob",jobRepository).incrementer(new RunIdIncrementer()).start(secondStep()).build();
     }
 
+    public Step secondStep(){
+        return new StepBuilder("secondStep",jobRepository).<Integer,Long>chunk(3,platformTransactionManager)
+                .reader(itemReader1).processor(itemProcessor1)
+                .writer(itemWriter1).build();
+    }
 //    public Tasklet secondTask(){
 //        return new Tasklet() {
 //            @Override
