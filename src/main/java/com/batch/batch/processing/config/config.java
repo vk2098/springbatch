@@ -48,13 +48,13 @@ public class config {
     @Autowired
     ItemProcessor1 itemProcessor1;
 
-//    @Bean
-//    public Job firstJob(){
-//        return new JobBuilder("firstJob",jobRepository).incrementer(new RunIdIncrementer())
-//                .start(firstStep()).next(secondStep()).listener(firstJobListener).
-//                build();
-//    }
-//
+    @Bean
+    public Job firstJob(){
+        return new JobBuilder("firstJob",jobRepository).incrementer(new RunIdIncrementer())
+                .start(firstStep()).listener(firstJobListener).
+                build();
+    }
+
 
     public Step firstStep(){
         return new StepBuilder("firstStep",jobRepository)
@@ -74,13 +74,10 @@ public class config {
     }
 
 
-//    public Step secondStep(){
-//        return new StepBuilder("secondStep",jobRepository).tasklet(secondTasklet,platformTransactionManager).build();
-//    }
 
     @Bean
     public Job secondJob() {
-        return new JobBuilder("secondjob",jobRepository).incrementer(new RunIdIncrementer()).start(secondStep()).build();
+        return new JobBuilder("secondJob",jobRepository).incrementer(new RunIdIncrementer()).start(secondStep()).build();
     }
 
     public Step secondStep(){
@@ -88,13 +85,5 @@ public class config {
                 .reader(itemReader1).processor(itemProcessor1)
                 .writer(itemWriter1).build();
     }
-//    public Tasklet secondTask(){
-//        return new Tasklet() {
-//            @Override
-//            public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-//                System.out.println("second task!");
-//                return RepeatStatus.FINISHED;
-//            }
-//        };
-//    }
+
 }

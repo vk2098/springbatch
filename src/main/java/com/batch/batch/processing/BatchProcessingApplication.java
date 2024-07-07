@@ -8,23 +8,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 
+@EnableAsync
 @SpringBootApplication
-public class BatchProcessingApplication implements CommandLineRunner {
+public class BatchProcessingApplication  {
 
-	@Autowired
-	private JobLauncher jobLauncher;
-
-	@Autowired
-	private Job firstJob;
+//	@Autowired
+//	private JobLauncher jobLauncher;
+//
+//	@Autowired
+//	private Job firstJob;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BatchProcessingApplication.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
-		JobExecution jobExecution = jobLauncher.run(firstJob, new JobParameters());
-		System.out.println("Job Execution Status: " + jobExecution.getStatus());
-	}
+//	@Override
+//	public void run(String... args) throws Exception {
+//		JobExecution jobExecution = jobLauncher.run(firstJob, new JobParameters());
+//		System.out.println("Job Execution Status: " + jobExecution.getStatus());
+//	}
 }
