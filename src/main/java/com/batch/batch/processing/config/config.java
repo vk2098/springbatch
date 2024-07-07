@@ -21,6 +21,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.config.Task;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
@@ -84,6 +85,27 @@ public class config {
         return new StepBuilder("secondStep",jobRepository).<Integer,Long>chunk(3,platformTransactionManager)
                 .reader(itemReader1).processor(itemProcessor1)
                 .writer(itemWriter1).build();
+    }
+
+
+    @Bean
+    public Job thirdJob(){
+        return new JobBuilder("thirdJob",jobRepository).incrementer(new RunIdIncrementer()).
+                start(thirdStep()).build();
+    }
+
+    Step thirdStep(){
+        return new StepBuilder("thirdstep",jobRepository).tasklet(thirdtasklet(),platformTransactionManager).build();
+    }
+
+    Tasklet thirdtasklet(){
+        return new Tasklet() {
+            @Override
+            public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+                System.out.println("This is the Third Job!");
+                return RepeatStatus.FINISHED;
+            }
+        };
     }
 
 }

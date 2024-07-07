@@ -29,6 +29,10 @@ public class BatchService {
     @Autowired
     Job secondjob;
 
+    @Qualifier("thirdJob")
+    @Autowired
+    Job thirdjob;
+
     @Async
     public void job(String params) throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         Job job=null;
