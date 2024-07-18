@@ -33,6 +33,10 @@ public class BatchService {
     @Autowired
     Job thirdjob;
 
+    @Qualifier("fourthJob")
+    @Autowired
+    Job fourthjob;
+
     @Async
     public void job(String params) throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         Job job=null;
@@ -41,6 +45,9 @@ public class BatchService {
         }
         else if (params.equals("secondJob")) {
             job = secondjob;
+        }
+        else if (params.equals("fourthJob")) {
+            job = fourthjob;
         }
         Map< String, JobParameter<?>> map=new HashMap<>();
         map.put("time", new JobParameter<>(LocalDateTime.now().toString(),String.class));
